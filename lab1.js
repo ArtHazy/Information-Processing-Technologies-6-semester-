@@ -1,6 +1,6 @@
 // arithmetic-coding
 
-const input = 'abbaab'
+const input = 'abababca';
 
 
 function code(string) {
