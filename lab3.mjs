@@ -15,21 +15,21 @@ class Path {
     }
 }
 
-// Hamilton impossible
-const graph = [
-    [new Path(0), new Path(3), null, null],
-    [new Path(3), new Path(0), new Path(2), new Path(4)],
-    [null, new Path(2), new Path(0), new Path(1)],
-    [null, new Path(4), new Path(1), new Path(0)]
-]
+// // Hamilton impossible
+// const graph = [
+//     [new Path(0), new Path(3), null, null],
+//     [new Path(3), new Path(0), new Path(2), new Path(4)],
+//     [null, new Path(2), new Path(0), new Path(1)],
+//     [null, new Path(4), new Path(1), new Path(0)]
+// ]
 
 // Hamilton possible
-// const graph = [
-//     [new Path(0), new Path(1), null, new Path(2)],
-//     [new Path(1), new Path(0), new Path(4), new Path(3)],
-//     [null, new Path(4), new Path(0), new Path(5)],
-//     [new Path(2), new Path(3), new Path(5), new Path(0)]
-// ]
+const graph = [
+    [new Path(0), new Path(1), null, new Path(2)],
+    [new Path(1), new Path(0), new Path(4), new Path(3)],
+    [null, new Path(4), new Path(0), new Path(5)],
+    [new Path(2), new Path(3), new Path(5), new Path(0)]
+]
 
 
 class Ant {
@@ -64,7 +64,7 @@ function logAntsPositions(ants) {
  * @param {number?} start index of the start vertex of the graph
  * @param {boolean?} visitAll 'true' to visit all
  */
-export function findShortestWay(final = 0, start = 0, visitAll = true) {
+export function findShortestWay(final = 3, start = 0, visitAll = false) {
     const start_population = 30
     const turns_before_killed = 8
     /** @type {Ant[]} */
@@ -100,6 +100,9 @@ export function findShortestWay(final = 0, start = 0, visitAll = true) {
     
         log('\nStart position: '); logAntsPositions(ants)
         moveAnts();
+        ants.forEach((ant, index) =>{
+            ant? plantPheromone(ant) : null
+        })
         vaporizePheromone(graph, 0.5)
         log('\nEnd position: '); logAntsPositions(ants)
         log('\ngraph',graph)
@@ -135,7 +138,7 @@ export function findShortestWay(final = 0, start = 0, visitAll = true) {
                     
                 } while (ant && (visitAll? ant.visited.length < graph.length+1 : ant.position != final) )
 
-                ant? plantPheromone(ant) : null
+                //ant? plantPheromone(ant) : null
             }
             return ant
         })
@@ -143,12 +146,7 @@ export function findShortestWay(final = 0, start = 0, visitAll = true) {
         /**
          * @param {Ant} ant array of integer indexes of verticies that were visited by the ant
          */
-        function plantPheromone(ant){
-            for(let i=0; i<ant.visited.length-1; i++) {
-                let path = graph[ant.visited[i]][ant.visited[i+1]]
-                path.pheromone += 1/ant.travelled_distance
-            }
-        }
+        
     }
 
     /**
@@ -162,6 +160,14 @@ export function findShortestWay(final = 0, start = 0, visitAll = true) {
             })
         })
     }
+
+function plantPheromone(ant){
+    for(let i=0; i<ant.visited.length-1; i++) {
+        let path = graph[ant.visited[i]][ant.visited[i+1]]
+        path.pheromone += 1/ant.travelled_distance
+    }
+}
+
 }
 
 
@@ -208,6 +214,7 @@ function choosePath(paths) {
         return result
     }
 }
+
 
 //(choosePath(graph_matrix[1]))
 findShortestWay()
