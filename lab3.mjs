@@ -36,11 +36,11 @@ class Ant {
     /** @type {number[]} */
     visited = []
     travelled_distance = 0
-    killAlert(){log('killing', this)}
+    killAlert() { log('killing', this) }
     /**
      * @param {number} position 
      */
-    constructor (position){
+    constructor(position) {
         this.position = position
     }
 }
@@ -78,9 +78,9 @@ export function findShortestWay(final = 3, start = 0, visitAll = false) {
     iterate()
     iterate()
 
-    function iterate(){
+    function iterate() {
         ants = []
-        if (start!=null) {
+        if (start != null) {
             for (let i = 0; i < start_population; i++) { // populate start with ants
                 let ant = new Ant(start)
                 ant.visited.push(start)
@@ -97,46 +97,46 @@ export function findShortestWay(final = 3, start = 0, visitAll = false) {
                 }
             })
         }
-    
+
         log('\nStart position: '); logAntsPositions(ants)
         moveAnts();
-        ants.forEach((ant, index) =>{
-            ant? plantPheromone(ant) : null
+        ants.forEach((ant, index) => {
+            ant ? plantPheromone(ant) : null
         })
         vaporizePheromone(graph, 0.5)
         log('\nEnd position: '); logAntsPositions(ants)
-        log('\ngraph',graph)
+        log('\ngraph', graph)
         log('\nants'); log(ants)
     }
-    
-    
 
-    function moveAnts(){
+
+
+    function moveAnts() {
         ants = ants.map((ant, index) => {
-            if (ant){
+            if (ant) {
                 do { // a move
                     let path_choice = choosePath(graph[ant.position])
 
                     // allows revisit only final
 
-                    let is_allowed = (path_choice == final? (
-                        visitAll? ant.visited.length == graph.length : true
-                    ):(
-                        ant.visited.find((visit_vertex)=>{return visit_vertex == path_choice})? false : true
+                    let is_allowed = (path_choice == final ? (
+                        visitAll ? ant.visited.length == graph.length : true
+                    ) : (
+                        ant.visited.find((visit_vertex) => { return visit_vertex == path_choice }) ? false : true
                     ))
 
                     //let is_allowed = (path_choice==final && ant.visited.length==graph.length) ? false : ant.visited.find((visit_vertex)=>{return visit_vertex == path_choice})
 
-                    if (path_choice==null || !is_allowed || ant.visited.length > turns_before_killed) {ant.killAlert(); ant=null}
+                    if (path_choice == null || !is_allowed || ant.visited.length > turns_before_killed) { ant.killAlert(); ant = null }
 
-                    if (ant){
+                    if (ant) {
                         // @ts-ignore
                         ant.travelled_distance += graph[ant.position][path_choice].length
                         ant.position = path_choice
                         ant.visited.push(path_choice)
                     }
-                    
-                } while (ant && (visitAll? ant.visited.length < graph.length+1 : ant.position != final) )
+
+                } while (ant && (visitAll ? ant.visited.length < graph.length + 1 : ant.position != final))
 
                 //ant? plantPheromone(ant) : null
             }
@@ -146,27 +146,27 @@ export function findShortestWay(final = 3, start = 0, visitAll = false) {
         /**
          * @param {Ant} ant array of integer indexes of verticies that were visited by the ant
          */
-        
+
     }
 
     /**
      * @param {(Path|null)[][]} graph graph which path's feromone to vaporize
      * @param {number} value value 0 - 1 of vaporization
      */
-    function vaporizePheromone(graph, value){
+    function vaporizePheromone(graph, value) {
         graph.forEach((paths) => {
             paths.forEach((path) => {
-                path? path.pheromone*=value : null
+                path ? path.pheromone *= value : null
             })
         })
     }
 
-function plantPheromone(ant){
-    for(let i=0; i<ant.visited.length-1; i++) {
-        let path = graph[ant.visited[i]][ant.visited[i+1]]
-        path.pheromone += 1/ant.travelled_distance
+    function plantPheromone(ant) {
+        for (let i = 0; i < ant.visited.length - 1; i++) {
+            let path = graph[ant.visited[i]][ant.visited[i + 1]]
+            path.pheromone += 1 / ant.travelled_distance
+        }
     }
-}
 
 }
 
@@ -176,7 +176,7 @@ function plantPheromone(ant){
  * @returns {number|null} integer index of the chosen path 
  */
 function choosePath(paths) {
-    return(makeChoice(countPropabilities()))
+    return (makeChoice(countPropabilities()))
 
     /**
      * @returns {(number|null)[]} array of propabilities for each path 
@@ -194,21 +194,21 @@ function choosePath(paths) {
             }
             propabilities.push(propability)
         })
-        return(propabilities);
+        return (propabilities);
     }
 
     /**
      * @param {(number | null)[]} propabilities 
      * @returns {number | null} integer index of the chosen path 
      */
-    function makeChoice(propabilities){
+    function makeChoice(propabilities) {
 
         let random = Math.random()
         let start = 0;
         let result = null;
         propabilities.forEach((propability, index) => {
-            if (propability && random > start && random < start+propability) {result=index}
-            start+= propability || 0 
+            if (propability && random > start && random < start + propability) { result = index }
+            start += propability || 0
         })
 
         return result
