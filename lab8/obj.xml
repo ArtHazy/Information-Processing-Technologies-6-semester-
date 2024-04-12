@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist>
+    <name>Old songs</name>
+    <song>
+        <name>Swish swish</name>
+        <author>Katy Perry</author>
+        <duration>4:02</duration>
+    </song>
+    <song>
+        <name>Tik tok</name>
+        <author>Kesha</author>
+        <duration>3:20</duration>
+    </song>
+    <song>
+        <name>Bad romance</name>
+        <author>Lady Gaga</author>
+        <duration>4:53</duration>
+    </song>
+</playlist>

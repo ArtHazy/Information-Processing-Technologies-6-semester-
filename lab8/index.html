@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        async function fetchAndRender() {
+            try {
+                const xmlResponse = await fetchXML('obj.xml');
+                const xslResponse = await fetchXML('obj.xsl');
+
+                if (xmlResponse.ok && xslResponse.ok) {
+                    const xml = await xmlResponse.text();
+                    const xsl = await xslResponse.text();
+                    render(xml, xsl);
+                } else {
+                    console.error('Failed to fetch XML or XSL file.');
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
+            }
+        }
+
+        async function fetchXML(fileName) {
+            const response = await fetch('http://localhost:3000/' + fileName);
+            return response;
+        }
+
+        function render(xml, xsl) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xml, 'text/xml');
+            const xslDoc = parser.parseFromString(xsl, 'text/xml');
+            const xsltProcessor = new XSLTProcessor();
+            xsltProcessor.importStylesheet(xslDoc);
+            const resultDocument = xsltProcessor.transformToDocument(xmlDoc);
+            document.getElementById('container').appendChild(resultDocument.documentElement);
+        }
+
+        fetchAndRender();
+    </script>
+</body>
+</html>

@@ -220,14 +220,13 @@ async function execute() {
         neuralNet.iteration([0,1], [1], i)
         neuralNet.iteration([0,0], [0], i)
         neuralNet.iteration([1,1], [1], i)
-        neuralNet.iteration([1,0], [1], i)
+        //neuralNet.iteration([1,0], [1], i)
 
         // log links
         i%100==0? console.log(neuralNet.layers.map((layer)=>layer.map((neuron)=>neuron.next.map((link)=>link.ω.value))),'\n\n') : null
     }
-
-    //neuralNet.iteration([0,1])
-    neuralNet.iteration([1,0])
+    
+    neuralNet.iteration([0,1])
 
     console.log();
 }
