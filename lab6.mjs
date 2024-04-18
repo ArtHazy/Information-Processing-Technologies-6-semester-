@@ -72,8 +72,6 @@ export class Neuron{
         this.activate(this.x+this.d)
     }
 
-    
-
     /**
      * 
      * @param {Neuron[] | null | undefined} nextNeuronLayer 
@@ -216,7 +214,7 @@ async function execute() {
     // log links
     console.log(neuralNet.layers.map((layer)=>layer.map((neuron)=>neuron.next.map((link)=>link.ω.value))));
 
-    for (let i= 0; i<1000; i++) {
+    for (let i= 0; i<10000; i++) {
         neuralNet.iteration([0,1], [1], i)
         neuralNet.iteration([0,0], [0], i)
         neuralNet.iteration([1,1], [1], i)
